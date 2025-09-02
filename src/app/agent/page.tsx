@@ -20,11 +20,12 @@ export default function AgentPage() {
         body: JSON.stringify({ prompt }),
       });
 
-      const data = await res.json();
+      const data: { ok?: boolean; text?: string; error?: string } = await res.json();
       if (!res.ok) throw new Error(data?.error || 'Request failed');
-      setAnswer(data.text);
-    } catch (e: any) {
-      setErr(e.message || 'Error');
+      setAnswer(data.text ?? '');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Error';
+      setErr(message);
     } finally {
       setLoading(false);
     }
